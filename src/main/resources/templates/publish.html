@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>温答</title>
+    <head th:insert="~{import :: headFragment}"></head>
+    <head th:insert="~{import :: markdownFragment}"></head>
+
+
+</head>
+<body class="bg-gray">
+<div th:insert="~{nav :: navFragment}"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-send" aria-hidden="true"></span>发起dd</h2>
+
+            <form action="/publish" method="post">
+                <input type="hidden" name="id" th:value="${id}">
+                <div class="form-group">
+                    <label for="title">问题标题 (简单扼要)：</label>
+                    <input autocomplete="off" th:value="${title}" type="text" class="form-control" id="title"
+                           name="title" placeholder="请输入标题">
+                </div>
+                <div class="form-group" id="editor-md">
+                    <label for="description">问题详情 (必填，请参照右侧提示)：</label>
+                    <textarea autocomplete="off" th:text="${description}" class="form-control" rows="3" id="description"
+                              name="description"
+                              placeholder="请输入问题详情"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-tag">问题标签 (选填，多个标签间以 , 隔开)：</label>
+                    <input th:id="input-tag" autocomplete="off" th:value="${tag}" type="text" class="form-control"
+                           id="input-tag"
+                           placeholder="请输入标签">
+                </div>
+                <!--标签选择器-->
+                <div th:id="tag-selector" style="display: none;">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active" th:each="tag,tagStat:${tags}"
+                            th:class="${tagStat.first}?'active':''">
+                            <a th:href="'#tag-'+${tag.id}" aria-controls="home" role="tab" data-toggle="tab"
+                               th:text="${tag.name}"></a>
+                        </li>
+                    </ul>
+
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" th:each="tag,tagStat:${tags}"
+                             th:class="${tagStat.first}?'tab-pane active':'tab-pane'" th:id="'tag-'+${tag.id}">
+                            <span class="tag-common"
+                                  th:each="subTag : ${tag.subTags}" th:text="${subTag.name}" onclick="selectTag(this)">
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div>
+                    <span th:if="${error!=null}" th:text="${error}"></span>
+                    <button type="submit" class="btn btn-success right m-10">发布</button>
+                </div>
+
+            </form>
+
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>问题发起指南</h3>
+            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字 <br>
+            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
+            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字<br>
+        </div>
+
+    </div>
+</div>
+<div th:insert="~{footer :: footerFragment}"></div>
+</body>
+<script type="text/javascript">
+    $(function () {
+        editormd("editor-md", {
+            width: "100%",
+            height: "350px",
+            delay: 0,
+            watch: false,
+            placeholder: "请输入问题描述",
+            path: "/threepart/editormd/lib/",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/file/upload",
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#input-tag").focus(function () {
+            console.log("获取焦点")
+            $("#tag-selector").show();
+        });
+        // $("#input-tag").blur(function(){
+        //     console.log("失去焦点")
+        //     $("#tag-selector").hide();
+        // });
+    });
+</script>
+</html>

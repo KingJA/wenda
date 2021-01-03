@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${sectionName}"></title>
+    <head th:insert="~{import :: headFragment}"></head>
+</head>
+<body class="bg-gray">
+<div th:insert="~{nav :: navFragment}"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-send" aria-hidden="true" th:text="${sectionName}"></span></h2>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section=='questions'}">
+                <div class="media" th:each="question : ${pageData.pageList}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object head-icon" th:src="${question.user.avatarUrl}" alt="...">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4><a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"
+                               class="a-common"></a></h4>
+                        <span class="text-desc">
+                                    <span th:text="5"/> 个回复 • <span th:text="${question.viewCount}"/> 次浏览 • <span
+                                th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm:ss')}"/>
+                                </span>
+
+                        <a th:href="@{'/publish/'+${question.id}}" class="icon-text"
+                           th:if="${session.user!=null&&session.user.id==question.creator}">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 编辑</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section=='replies'}">
+                <div th:each="reply : ${pageData.pageList}" class="m-b-10">
+                    <p class="m-b-10">
+
+
+                        <a th:text="${reply.senderName}" class="a-common"></a>
+                        <span th:text="${reply.typeDes}" class="text-desc"></span>
+                        <a th:href="@{'/notification/'+${reply.id}}" th:text="${reply.targetTitle}" class="a-common"></a>
+
+                        <span class="right">
+                        <span th:if="${!reply.status}" class="dot-common m-r-10"></span>
+                        <span th:text="${#dates.format(reply.createTime, 'yyyy-MM-dd HH:mm:ss')}"
+                              class="text-desc"></span>
+                    </span>
+                    </p>
+                </div>
+
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <head th:insert=" ~{page :: pageFragment}"></head>
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>个人中心</h3>
+            <div class="list-group">
+                <a href="/profile/questions"
+                   th:class="${section=='questions'}?'list-group-item active':'list-group-item'">我的问题</a>
+                <a href="/profile/replies"
+                   th:class="${section=='replies'}?'list-group-item active':'list-group-item'"><span
+                        class="badge" th:text="${session.unreadCount}"></span>最近回复</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:insert="~{footer :: footerFragment}"></div>
+</body>
+</html>

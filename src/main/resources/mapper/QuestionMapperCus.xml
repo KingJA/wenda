@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kingja.wenda.mapper.QuestionMapperCus">
+    <resultMap id="BaseResultMap" type="com.kingja.wenda.model.Question">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="creator" jdbcType="INTEGER" property="creator"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="tag" jdbcType="VARCHAR" property="tag"/>
+        <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified"/>
+    </resultMap>
+    <update id="incViewCount" parameterType="Integer">
+        update question
+        set view_count = view_count + 1
+        where id = #{id}
+    </update>
+
+    <update id="incCommentCount" parameterType="Integer">
+        update question
+        set comment_count = comment_count + 1
+        where id = #{id}
+    </update>
+    <select id="getRelatedQuestions" parameterType="com.kingja.wenda.model.Question" resultMap="BaseResultMap">
+        SELECT *
+        FROM question
+        WHERE tag REGEXP #{tag}
+        order by gmt_create desc
+    </select>
+
+    <select id="searchQuestions" parameterType="String" resultMap="BaseResultMap">
+        SELECT * FROM question
+        <where>
+            <if test="keyword!=null">
+                and title REGEXP #{keyword}
+            </if>
+        </where>
+        order by gmt_create desc
+    </select>
+
+
+</mapper>

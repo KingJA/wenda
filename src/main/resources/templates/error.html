@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>温答</title>
+    <head th:insert="~{import :: headFragment}"></head>
+</head>
+<body class="bg-gray">
+<div th:insert="~{nav :: navFragment}"></div>
+<div class="container-fluid m-10 bg-white">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="jumbotron">
+                <h1>出错啦</h1>
+                <p th:text="${message}">服务器太热了，稍后再试</p>
+                <p><a class="btn btn-primary btn-lg" href="/" role="button">回到主页</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

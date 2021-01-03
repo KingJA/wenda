@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>温答</title>
+    <head th:insert="~{import :: headFragment}"></head>
+</head>
+<script type="application/javascript">
+    window.onload = function () {
+        var closable = window.localStorage.getItem("closable");
+        if (closable == "true") {
+            window.close();
+            window.localStorage.removeItem("closable");
+        }
+    }
+</script>
+<body class="bg-gray">
+<div th:insert="~{nav :: navFragment}"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-send" aria-hidden="true"></span>问题列表</h2>
+
+            <div class="media" th:each="question : ${pageData.pageList}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object head-icon" th:src="${question.user.avatarUrl}" alt="...">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" ><a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a></h4>
+                    <span class="text-desc">
+                        <span th:text="${question.commentCount}"/> 个回复 • <span th:text="${question.viewCount}"/> 次浏览 • <span
+                            th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm:ss')}"/>
+                    </span>
+                </div>
+            </div>
+            <!--分页-->
+            <head th:insert="~{page :: pageFragment}"></head>
+
+        </div>
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3>热门问题</h3>
+        </div>
+    </div>
+</div>
+<div th:insert="~{footer :: footerFragment}"></div>
+</body>
+</html>
